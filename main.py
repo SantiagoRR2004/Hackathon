@@ -4,7 +4,6 @@ import fileHandling
 from logger import Logger
 
 
-
 if __name__ == "__main__":
     devices = fileHandling.getConnectedDevices()
     logger = Logger(name="AppLogger", log_file="App.log").get_logger()
@@ -16,4 +15,3 @@ if __name__ == "__main__":
         check_devices_and_file_existance(devices)
     else:
         logger.warning("No connected devices found.")
-
