@@ -4,22 +4,10 @@
 import os
 import shutil
 from concurrent.futures import ThreadPoolExecutor
+import fileHandling
 
 from logger import Logger
 
-def is_gcsv(filename):
-    """
-    Check if the given filename has a valid video file extension.
-
-    Args:
-        filename (str): The name of the file to check.
-
-    Returns:
-        bool: True if the file has a valid video extension, False otherwise.
-    """
-    valid_extensions = {".gcsv"}
-    _, extension = os.path.splitext(filename.lower())
-    return extension in valid_extensions
 
 def gcsv_files_from_cameras(camera_paths):
     """
@@ -44,7 +32,7 @@ def gcsv_files_from_cameras(camera_paths):
             continue
         for root, dirs, files in os.walk(camera_path):
             for filename in files:
-                if is_gcsv(filename):
+                if fileHandling.is_gcsv(filename):
                     yield camera_path, os.path.join(root, filename), filename
 
 def process_file(task):
