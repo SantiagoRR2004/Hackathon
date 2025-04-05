@@ -1,5 +1,5 @@
 import os
-from checkExistingFIles import check_devices_and_file_existance
+from checkExistingFiles import check_devices_and_file_existance
 import fileHandling
 from logger import Logger
 
