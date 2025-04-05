@@ -2,6 +2,8 @@ import os
 import json
 import stat
 import warnings
+import download_video
+import download_gcsv
 
 
 def check_devices_and_file_existance(device_names : list):
@@ -35,8 +37,8 @@ def check_devices_and_file_existance(device_names : list):
         warnings.warn(f"Device '{device_name}' is not allowed. Files will not be created for this device.")
     else:
         # Define file paths inside the device folder
-        device_video_dir = os.path.join(video_dir, device_name)
-        device_gcsv_dir = os.path.join(gcsv_dir, device_name)
+        device_video_dir = os.path.join(device_name, video_dir)
+        device_gcsv_dir = os.path.join(device_name, gcsv_dir)
 
         try:
             original_umask = os.umask(0)
@@ -52,26 +54,22 @@ def check_devices_and_file_existance(device_names : list):
         os.chmod(device_video_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
         os.chmod(device_gcsv_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
-        video_path = os.path.join(device_video_dir, "video.mp4")
-        gcsv_path = os.path.join(device_gcsv_dir, "data.gcsv")
+        video_path = os.path.join(device_video_dir, "video.mp4") # FIXME
+        gcsv_path = os.path.join(device_gcsv_dir, "data.gcsv") # FIXME
 
+        # TODO quitar comprobaciones de existencia que ya se hacen en download
         # Check if files exist
         if os.path.exists(video_path):
             print("Video already exists")
         else:
             print("Saving video...")
-            # TODO : Add code to save the video
-
-            # create dummy video file for testing
-            with open(video_path, "wb") as video_file:
-                video_file.write(b"Dummy video data")
+            download_video.run(device_names, device_video_dir)
         
         if os.path.exists(gcsv_path):
             print("GCSV already exists")
         else:
             print("Saving GCSV...")
-            # TODO : Add code to save the GCSV
+            download_gcsv.run(device_names, device_gcsv_dir)
             
-            # create dummy gcsv file for testing
-            with open(gcsv_path, "w") as gcsv_file:
-                gcsv_file.write("Dummy GCSV data")
+            
+            

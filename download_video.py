@@ -83,15 +83,8 @@ def process_file(task):
     else:
         logging.info(f"Skipped (already exists) from {cam_path}: {filename}")
 
-def main():
+def run(camera_paths, destination_path):
     # Define camera mount paths
-    camera_paths = [
-        "/media/camera1",
-        "/media/camera2",
-        # Add more camera paths as needed
-    ]
-    # Destination folder and log file
-    destination_path = "/home/username/Videos/camera_downloads"
     log_file = os.path.join(destination_path, "download_log.txt")
 
     # Create the destination folder if it doesn't exist
@@ -127,5 +120,4 @@ def main():
         # executor.map will handle the iterable lazily and process files as they are generated
         list(executor.map(process_file, tasks_iterable))
 
-if __name__ == "__main__":
-    main()
+
