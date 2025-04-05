@@ -17,13 +17,15 @@ def check_devices_and_file_existance(device_names: list):
 
     config.createDirectories()
 
-    device_name = config.getValidDevices(device_names)[0]
+    device_name = config.getValidDevices(device_names)
 
     device_video_dir = config.getVideoFolder()
     device_gcsv_dir = config.getGCSVFolder()
 
-    logger.info(f"Saving videos")
-    download_video.run(device_names, device_video_dir)
+    if device_name:
 
-    logger.info(f"Saving GCSV")
-    download_gcsv.run(device_names, device_gcsv_dir)
+        logger.info(f"Saving videos")
+        download_video.run(device_name, device_video_dir)
+
+        logger.info(f"Saving GCSV")
+        download_gcsv.run(device_name, device_gcsv_dir)
