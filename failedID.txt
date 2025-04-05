@@ -4,3 +4,4 @@ blkid
 usb-devices
 findmnt
 sudo dmesg
+lsblk -S
