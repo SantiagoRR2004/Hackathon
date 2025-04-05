@@ -5,21 +5,9 @@ import os
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from logger import Logger
+import fileHandling
 
 
-def is_video(filename):
-    """
-    Check if the given filename has a valid video file extension.
-
-    Args:
-        filename (str): The name of the file to check.
-
-    Returns:
-        bool: True if the file has a valid video extension, False otherwise.
-    """
-    valid_extensions = {".mp4", ".mov", ".avi", ".mkv", ".mts", ".m2ts"}
-    _, extension = os.path.splitext(filename.lower())
-    return extension in valid_extensions
 
 def video_files_from_cameras(camera_paths):
     """
@@ -44,7 +32,7 @@ def video_files_from_cameras(camera_paths):
             continue
         for root, dirs, files in os.walk(camera_path):
             for filename in files:
-                if is_video(filename):
+                if fileHandling.is_video(filename):
                     yield camera_path, os.path.join(root, filename), filename
 
 def process_file(task):
