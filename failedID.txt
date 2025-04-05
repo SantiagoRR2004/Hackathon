@@ -1,0 +1,6 @@
+lsusb -v
+lsblk
+blkid
+usb-devices
+findmnt
+sudo dmesg
