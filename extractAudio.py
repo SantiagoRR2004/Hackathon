@@ -1,5 +1,6 @@
 import ffmpeg
 import os
+import parallelism
 
 
 def extractAudio(inputFile: str, outputFolder: str) -> None:
@@ -38,11 +39,16 @@ def extractFolder(inputFolder: str, outputFolder: str) -> None:
     Returns:
         - None
     """
+    args = []
     for filename in os.listdir(inputFolder):
         if filename.lower().endswith(".mp4"):
             absPath = os.path.abspath(os.path.join(inputFolder, filename))
-            print(f"Extracting audio from {absPath}...")
-            extractAudio(absPath, outputFolder)
+            args.append([absPath, outputFolder])
+    
+    parallelism.executeFunction(
+        extractAudio,
+        args,
+    )
 
 
 if __name__ == "__main__":
