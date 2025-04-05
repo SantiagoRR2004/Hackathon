@@ -126,5 +126,5 @@ def main(csv_path, video_path):
 
 if __name__ == '__main__':
     csv_path = 'video_sensor_sync.csv'
-    video_path = 'tu_video.mp4'
+    video_path = 'Runcam6_0002.MP4'
     main(csv_path, video_path)
