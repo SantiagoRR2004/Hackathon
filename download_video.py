@@ -55,4 +55,4 @@ def run(camera_paths, destination_path):
             for cam_path, source, filename in video_files_from_cameras(camera_paths)
         )
         # executor.map will handle the iterable lazily and process files as they are generated
-        list(executor.map(fileHandling.process_file, tasks_iterable, logger=logger))
+        list(executor.map(fileHandling.process_file, tasks_iterable))
