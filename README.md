@@ -25,6 +25,8 @@ This project handles the process of automatically retrieving video and gyro data
   Detects connected devices, checks valid file extensions, and copies relevant files to local directories.
 - **`download_video.py`** & **`download_gcsv.py`**  
   Use thread pools to scan device mounts for media files and copy them to the local destination paths.
+- **`loop.sh`**
+  Execute part 1 requirements to copy the movies from the camera to the computer.
 - **`stabilize.sh`**  
   Provides functionality to run Gyroflow from bash, constructing commands with the appropriate preset, video, and GCSV files.
 - **`overlay.py`**  
