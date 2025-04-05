@@ -5,7 +5,7 @@ This project handles the process of automatically retrieving video and gyro data
 ## What the Project Does
 
 1. **Automatization of Data Retrieval**  
-   The code checks the allowed cameras listed in `config.json` (found in `/home/lucas/Hackathon/config.json`) and automatically retrieves videos (`.mp4`) and gyro data (`.gcsv`) from connected devices. The relevant functions create necessary directories (`videos/` and `gcsvs/`) as specified in the configuration.
+   The code checks the allowed cameras listed in [`config.json`](`./config.json`) and automatically retrieves videos (`.mp4`) and gyro data (`.gcsv`) from connected devices. The relevant functions create necessary directories (`videos/` and `gcsvs/`) as specified in the configuration.
 
 2. **Video Stabilization Using Gyroflow**  
    Once the video and gyro data are collected, precomputed stabilization presets (also specified in `config.json`) are used to run Gyroflow. The goal is to stabilize the footage automatically using the stored `.gcsv` files and the correct preset for each device.
