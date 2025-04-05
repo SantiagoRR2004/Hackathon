@@ -28,7 +28,9 @@ This project handles the process of automatically retrieving video and gyro data
 - **`overlay.py`**  
   Overlays sensor data onto the stabilized video.  
 - **`sync.py`**  
-  Synchronizes frame-by-frame sensor data from `.gcsv` files to the corresponding video frames.  
+  Synchronizes frame-by-frame sensor data from `.gcsv` files to the corresponding video frames and outputs a CSV for data analysis.
+- **`data_analysis.py`**
+  Generates a 15 seconds clip from the top 3 moments after analysing IMU data and YOLO car and person count.
 
 ## Usage
 1. **Configure `config.json`**  
