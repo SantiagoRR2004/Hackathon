@@ -3,9 +3,9 @@
 
 import os
 import shutil
-import sys
-import logging
 from concurrent.futures import ThreadPoolExecutor
+from logger import Logger
+
 
 def is_video(filename):
     """
@@ -40,7 +40,7 @@ def video_files_from_cameras(camera_paths):
     """
     for camera_path in camera_paths:
         if not os.path.ismount(camera_path):
-            logging.warning(f"Camera is not mounted at {camera_path}. Skipping.")
+            logger.warning(f"Camera is not mounted at {camera_path}. Skipping.")
             continue
         for root, dirs, files in os.walk(camera_path):
             for filename in files:
@@ -79,36 +79,23 @@ def process_file(task):
     # Check if the file already exists at the destination
     if not os.path.exists(destination):
         shutil.copy2(source, destination)
-        logging.info(f"Downloaded from {cam_path}: {filename}")
+        logger.info(f"Downloaded from {cam_path}: {filename}")
     else:
-        logging.info(f"Skipped (already exists) from {cam_path}: {filename}")
+        logger.info(f"Skipped (already exists) from {cam_path}: {filename}")
 
 def run(camera_paths, destination_path):
+
+    global logger
+
     # Define camera mount paths
     log_file = os.path.join(destination_path, "download_log.txt")
+
+    # Configure the logger
+    logger = Logger(name="DownloadVideoLogger", log_file=log_file).get_logger()
 
     # Create the destination folder if it doesn't exist
     os.makedirs(destination_path, exist_ok=True)
 
-    # Set up logging: file handler to log everything, console handler for warnings and above.
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
-    file_handler = logging.FileHandler(log_file, encoding='utf-8')
-    file_handler.setLevel(logging.DEBUG)
-
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.WARNING)
-
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-
-    if logger.hasHandlers():
-        logger.handlers.clear()
-
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
 
     # Use ThreadPoolExecutor with executor.map to process files as they are generated
     with ThreadPoolExecutor(max_workers=4) as executor:
