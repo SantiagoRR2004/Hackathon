@@ -1,0 +1,8 @@
+{
+    "allowed_devices": ["9C33-6BBD", "camera_2", "webcam_3"],
+    "paths": {
+      "video_dir": "./videos",
+      "gcsv_dir": "./gcsvs"
+    }
+  }
+  
