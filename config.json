@@ -3,6 +3,7 @@
     "paths": {
       "video_dir": "./videos",
       "gcsv_dir": "./gcsvs"
-    }
+    },
+    "preset_path": "./presets/9C33-6BBD_presets.json"
   }
   
