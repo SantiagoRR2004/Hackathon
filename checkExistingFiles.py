@@ -3,6 +3,7 @@ import json
 import warnings
 import download_video
 import download_gcsv
+from logger import Logger
 
 
 def getValidDevices(device_names: list) -> list:
@@ -78,6 +79,11 @@ def check_devices_and_file_existance(device_names: list):
     If not, create the directories and files with full permissions.
     """
 
+    # Initialize logger
+    logger = Logger(
+        name="CheckFilesLogger", log_file="CheckFiles.log"
+    ).get_logger()  # TODO define path
+
     createDirectories()
 
     device_name = getValidDevices(device_names)[0]
@@ -85,8 +91,8 @@ def check_devices_and_file_existance(device_names: list):
     device_video_dir = getVideoFolder()
     device_gcsv_dir = getGCSVFolder()
 
-    print("Saving video...")
+    logger.info(f"Saving videos")
     download_video.run(device_names, device_video_dir)
 
-    print("Saving GCSV...")
+    logger.info(f"Saving GCSV")
     download_gcsv.run(device_names, device_gcsv_dir)
