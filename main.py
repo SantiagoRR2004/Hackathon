@@ -1,5 +1,5 @@
 import os
-
+from checkExistingFIles import check_devices_and_file_existance
 
 def getConnectedDevices() -> list:
     """
@@ -16,4 +16,12 @@ def getConnectedDevices() -> list:
 
 
 if __name__ == "__main__":
-    print(getConnectedDevices())
+    devices = getConnectedDevices()
+    if devices:
+        print("Connected devices:")
+        for device in devices:
+            print(device)
+        check_devices_and_file_existance(devices)
+    else:
+        print("No connected devices found.")
+
