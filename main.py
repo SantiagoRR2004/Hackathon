@@ -1,5 +1,6 @@
 import os
 from checkExistingFIles import check_devices_and_file_existance
+from logger import Logger
 
 def getConnectedDevices() -> list:
     """
@@ -16,12 +17,14 @@ def getConnectedDevices() -> list:
 
 
 if __name__ == "__main__":
+    logger = Logger(name="AppLogger", log_file="App.log").get_logger()
+
     devices = getConnectedDevices()
     if devices:
-        print("Connected devices:")
+        logger.info("Connected devices:")
         for device in devices:
-            print(device)
+            logger.info(device)
         check_devices_and_file_existance(devices)
     else:
-        print("No connected devices found.")
+        logger.warning("No connected devices found.")
 

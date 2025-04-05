@@ -4,7 +4,7 @@ import stat
 import warnings
 import download_video
 import download_gcsv
-
+from logger import Logger
 
 def check_devices_and_file_existance(device_names : list):
     """
@@ -12,9 +12,12 @@ def check_devices_and_file_existance(device_names : list):
     If not, create the directories and files with full permissions.
     """
 
+    # Initialize logger
+    logger = Logger(name="CheckFilesLogger", log_file="CheckFiles.log").get_logger() #TODO define path
+
     # Check if the device names are provided
     devices = [os.path.basename(device_name) for device_name in device_names]
-    print(type(devices))
+    logger.info(type(devices))
 
     # Load configuration from config.json
     config_path = "config.json"
@@ -32,7 +35,7 @@ def check_devices_and_file_existance(device_names : list):
     # Check if the device is allowed
     if device_name not in allowed:
         # TODO turn this onto a log
-        print(f"Warning: Device '{device_name}' is not allowed. Files will not be created for this device.")
+        logger.warning(f"Warning: Device '{device_name}' is not allowed. Files will not be created for this device.")
         # throw warning but dont interrupt
         warnings.warn(f"Device '{device_name}' is not allowed. Files will not be created for this device.")
     else:
@@ -46,7 +49,7 @@ def check_devices_and_file_existance(device_names : list):
             os.makedirs(device_video_dir, mode=0o777 , exist_ok=True)
             os.makedirs(device_gcsv_dir, mode= 0o777, exist_ok=True)
         except OSError as e:
-            print(f"Error creating directories: {e}")
+            logger.warning(f"Error creating directories: {e}")
         finally:
             os.umask(original_umask)
 
@@ -60,15 +63,15 @@ def check_devices_and_file_existance(device_names : list):
         # TODO quitar comprobaciones de existencia que ya se hacen en download
         # Check if files exist
         if os.path.exists(video_path):
-            print("Video already exists")
+            logger.info("Video already exists")
         else:
-            print("Saving video...")
+            logger.info("Saving video...")
             download_video.run(device_names, device_video_dir)
         
         if os.path.exists(gcsv_path):
-            print("GCSV already exists")
+            logger.info("GCSV already exists")
         else:
-            print("Saving GCSV...")
+            logger.info("Saving GCSV...")
             download_gcsv.run(device_names, device_gcsv_dir)
             
             

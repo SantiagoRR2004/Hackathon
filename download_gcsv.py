@@ -90,7 +90,7 @@ def run(camera_paths, destination_path):
     # Define camera mount paths    
     log_file = os.path.join(destination_path, "download_log.txt")
 
-    logger = Logger(name="DownloadVideoLogger", log_file=log_file).get_logger()
+    logger = Logger(name="DownloadGCSVLogger", log_file=log_file).get_logger()
 
     # Create the destination folder if it doesn't exist
     os.makedirs(destination_path, exist_ok=True)
