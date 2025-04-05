@@ -32,7 +32,7 @@ def gcsv_files_from_cameras(camera_paths):
         for root, dirs, files in os.walk(camera_path):
 
             # Skip directories that start with .Trash
-            dirs[:] = [d for d in dirs if not d.startswith('.Trash')]
+            dirs[:] = [d for d in dirs if not d.startswith(".Trash")]
 
             for filename in files:
                 if fileHandling.is_gcsv(filename):

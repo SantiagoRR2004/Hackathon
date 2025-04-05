@@ -9,19 +9,22 @@ def read_gcsv_file(gcsv_file):
     ax_vals, ay_vals, az_vals = [], [], []
     time_offset = 0.0  # Offset acumulativo de tiempo
 
-    with open(gcsv_file, newline='') as f:
+    with open(gcsv_file, newline="") as f:
         reader = csv.reader(f)
         tscale = gscale = ascale = None
         header_passed = False
         for row in reader:
             if not header_passed:
-                if len(row) > 0 and row[0] == 't':
+                if len(row) > 0 and row[0] == "t":
                     header_passed = True
                 else:
                     if len(row) >= 2:
-                        if row[0] == 'tscale': tscale = float(row[1])
-                        if row[0] == 'gscale': gscale = float(row[1])
-                        if row[0] == 'ascale': ascale = float(row[1])
+                        if row[0] == "tscale":
+                            tscale = float(row[1])
+                        if row[0] == "gscale":
+                            gscale = float(row[1])
+                        if row[0] == "ascale":
+                            ascale = float(row[1])
                 continue
 
             if len(row) >= 7:
@@ -54,17 +57,30 @@ def read_gcsv_file(gcsv_file):
 
 def get_total_frames(video_file):
     ffprobe_cmd = [
-        "ffprobe", "-v", "error", "-select_streams", "v:0", "-count_frames",
-        "-show_entries", "stream=nb_read_frames", "-of", "csv=p=0", video_file
+        "ffprobe",
+        "-v",
+        "error",
+        "-select_streams",
+        "v:0",
+        "-count_frames",
+        "-show_entries",
+        "stream=nb_read_frames",
+        "-of",
+        "csv=p=0",
+        video_file,
     ]
-    result = subprocess.run(ffprobe_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(
+        ffprobe_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
     if result.returncode == 0:
         return int(result.stdout.strip())
     else:
         raise RuntimeError(f"ffprobe failed: {result.stderr}")
 
 
-def synchronize_data(times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals, total_frames, fps=60):
+def synchronize_data(
+    times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals, total_frames, fps=60
+):
     frame_times = [n / fps for n in range(total_frames)]
     sensor_index = 0
     synced_data = []
@@ -92,14 +108,16 @@ def synchronize_data(times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals
         ay_val = ay_vals[closest_idx]
         az_val = az_vals[closest_idx]
 
-        synced_data.append([frame_num, timestamp, rx_val, ry_val, rz_val, ax_val, ay_val, az_val])
+        synced_data.append(
+            [frame_num, timestamp, rx_val, ry_val, rz_val, ax_val, ay_val, az_val]
+        )
         sensor_index = max(0, closest_idx - 1)
 
     return synced_data
 
 
 def save_to_csv(synced_data, output_csv):
-    with open(output_csv, "w", newline='') as f:
+    with open(output_csv, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["frame", "timestamp", "rx", "ry", "rz", "ax", "ay", "az"])
         for row in synced_data:
@@ -111,10 +129,14 @@ video_file = "Runcam6_0002.MP4"
 total_frames = get_total_frames(video_file)
 
 # Leer archivo GCSV
-(times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals) = read_gcsv_file(gcsv_file)
+(times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals) = read_gcsv_file(
+    gcsv_file
+)
 
 # Sincronizar datos
-synced_data = synchronize_data(times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals, total_frames)
+synced_data = synchronize_data(
+    times, rx_vals, ry_vals, rz_vals, ax_vals, ay_vals, az_vals, total_frames
+)
 
 # Guardar en CSV
 save_to_csv(synced_data, "video_sensor_sync.csv")

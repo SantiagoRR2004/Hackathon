@@ -11,9 +11,16 @@ class Logger:
     This class encapsulates the configuration for logging, including a file handler that logs all messages
     and a console handler that displays only warnings and errors.
     """
+
     _instance = None
 
-    def __new__(cls, name=None, log_file="app.log", level=logging.DEBUG, console_level=logging.WARNING):
+    def __new__(
+        cls,
+        name=None,
+        log_file="app.log",
+        level=logging.DEBUG,
+        console_level=logging.WARNING,
+    ):
         """
         Create a new instance of Logger if one does not exist, otherwise return the existing instance.
 

@@ -2,6 +2,7 @@ import os
 import json
 import warnings
 
+
 def getConfiguration() -> dict:
     """
     Load the configuration from the config.json file.

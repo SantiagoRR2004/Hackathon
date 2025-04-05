@@ -60,7 +60,7 @@ def is_gcsv(filename: str) -> bool:
     return isExtension(filename, valid_extensions)
 
 
-def process_file(task : tuple, logger=None) -> None:
+def process_file(task: tuple, logger=None) -> None:
     """
     Process a single file download task.
 

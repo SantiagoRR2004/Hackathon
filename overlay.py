@@ -3,9 +3,10 @@ import cv2
 import numpy as np
 import sys
 
+
 def read_csv_data(csv_file):
     synced_data = []
-    with open(csv_file, newline='') as f:
+    with open(csv_file, newline="") as f:
         reader = csv.reader(f)
         header = next(reader)  # Leer encabezado
         for row in reader:
@@ -20,7 +21,10 @@ def read_csv_data(csv_file):
             synced_data.append([frame_num, timestamp, rx, ry, rz, ax, ay, az])
     return synced_data
 
-def overlay_video_with_data(video_file, csv_file, output_file="output_with_overlay.mp4", fps=60):
+
+def overlay_video_with_data(
+    video_file, csv_file, output_file="output_with_overlay.mp4", fps=60
+):
     synced_data = read_csv_data(csv_file)
 
     cap = cv2.VideoCapture(video_file)
@@ -28,7 +32,7 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Probar diferentes codecs hasta encontrar uno compatible
-    codecs = ['H264', 'avc1', 'mp4v', 'X264']
+    codecs = ["H264", "avc1", "mp4v", "X264"]
     out = None
 
     for codec in codecs:
@@ -41,7 +45,9 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
             print(f"Error: No se pudo inicializar VideoWriter con codec: {codec}")
 
     if not out.isOpened():
-        print("No se pudo inicializar ningún codec válido. Revisa tu instalación de OpenCV y FFmpeg.")
+        print(
+            "No se pudo inicializar ningún codec válido. Revisa tu instalación de OpenCV y FFmpeg."
+        )
         return
 
     frame_idx = 0
@@ -62,14 +68,23 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
             f"Rz: {rz:.3f}",
             f"Ax: {ax:.3f}",
             f"Ay: {ay:.3f}",
-            f"Az: {az:.3f}"
+            f"Az: {az:.3f}",
         ]
 
         text_y = 30  # Posición inicial Y
         text_x = 10  # Posición X a la izquierda
 
         for line in text_lines:
-            cv2.putText(frame, line, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(
+                frame,
+                line,
+                (text_x, text_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                (0, 0, 255),
+                2,
+                cv2.LINE_AA,
+            )
             text_y += 30  # Incrementar para la siguiente línea
 
         out.write(frame)
@@ -82,7 +97,9 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Uso: python3 superponer_overlay.py <archivo_video.mp4> <archivo_csv.csv>")
+        print(
+            "Uso: python3 superponer_overlay.py <archivo_video.mp4> <archivo_csv.csv>"
+        )
         sys.exit(1)
 
     video_file = sys.argv[1]

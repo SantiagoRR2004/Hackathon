@@ -44,7 +44,7 @@ def extractFolder(inputFolder: str, outputFolder: str) -> None:
         if filename.lower().endswith(".mp4"):
             absPath = os.path.abspath(os.path.join(inputFolder, filename))
             args.append([absPath, outputFolder])
-    
+
     parallelism.executeFunction(
         extractAudio,
         args,

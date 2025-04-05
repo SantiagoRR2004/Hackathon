@@ -19,15 +19,21 @@ def run():
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Process video files with gyroflow.")
-    parser.add_argument("-v", "--video_filename", required=True, help="Name of the video file")
-    parser.add_argument("-g", "--gcsv_filename", required=True, help="Name of the GCSV file")
+    parser.add_argument(
+        "-v", "--video_filename", required=True, help="Name of the video file"
+    )
+    parser.add_argument(
+        "-g", "--gcsv_filename", required=True, help="Name of the GCSV file"
+    )
     args = parser.parse_args()
 
     config = getConfiguration()
 
     video_dir = config["paths"]["video_dir"]
     gcsv_dir = config["paths"]["gcsv_dir"]
-    preset_path = config["preset_path"] # the precomputed presets to use, depend on the specific device
+    preset_path = config[
+        "preset_path"
+    ]  # the precomputed presets to use, depend on the specific device
 
     # Configure file names and preset path
     video_filename = args.video_filename
@@ -41,9 +47,11 @@ def run():
     command = [
         "./Gyroflow/gyroflow",
         video_path,
-        "-g", gcsv_path,
-        "--preset", preset_path,
-        "-f" 
+        "-g",
+        gcsv_path,
+        "--preset",
+        preset_path,
+        "-f",
     ]
 
     # Run the command

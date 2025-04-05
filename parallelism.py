@@ -1,5 +1,6 @@
 from concurrent.futures import ProcessPoolExecutor
 
+
 def executeFunction(func, args: list) -> None:
     """
     This function executes a given function with dynamic arguments using a ProcessPoolExecutor.
