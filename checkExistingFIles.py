@@ -1,6 +1,5 @@
 import os
 import json
-import stat
 import warnings
 import download_video
 import download_gcsv
@@ -30,54 +29,64 @@ def getValidDevices(device_names: list) -> list:
     return allowedFound
 
 
+def getVideoFolder() -> str:
+    """
+    Get the video folder path from the configuration file.
+    """
+    # Load configuration from config.json
+    config_path = "config.json"
+    with open(config_path, "r") as config_file:
+        config = json.load(config_file)
+
+    # Retrieve video directory from the config file
+    video_dir = config["paths"]["video_dir"]
+
+    return video_dir
+
+
+def getGCSVFolder() -> str:
+    """
+    Get the GCSV folder path from the configuration file.
+    """
+    # Load configuration from config.json
+    config_path = "config.json"
+    with open(config_path, "r") as config_file:
+        config = json.load(config_file)
+
+    # Retrieve GCSV directory from the config file
+    gcsv_dir = config["paths"]["gcsv_dir"]
+
+    return gcsv_dir
+
+
+def createDirectories() -> None:
+    """
+    Create directories for video and GCSV files.
+    """
+    # Retrieve directories from the config file
+    video_dir = getVideoFolder()
+    gcsv_dir = getGCSVFolder()
+
+    # Create directories if they don't exist
+    os.makedirs(video_dir, exist_ok=True)
+    os.makedirs(gcsv_dir, exist_ok=True)
+
+
 def check_devices_and_file_existance(device_names: list):
     """
     Check if video and GCSV files already exist in the specified directories.
     If not, create the directories and files with full permissions.
     """
 
-    # Load configuration from config.json
-    config_path = "config.json"
-    with open(config_path, "r") as config_file:
-        config = json.load(config_file)
-
-    # Retrieve directories and allowed devices from the config file
-    video_dir = config["paths"]["video_dir"]
-    gcsv_dir = config["paths"]["gcsv_dir"]
+    createDirectories()
 
     device_name = getValidDevices(device_names)[0]
 
-    # Define file paths inside the device folder
-    device_video_dir = os.path.join(device_name, video_dir)
-    device_gcsv_dir = os.path.join(device_name, gcsv_dir)
+    device_video_dir = getVideoFolder()
+    device_gcsv_dir = getGCSVFolder()
 
-    try:
-        original_umask = os.umask(0)
-        # Ensure the directories exist and set permissions
-        os.makedirs(device_video_dir, mode=0o777, exist_ok=True)
-        os.makedirs(device_gcsv_dir, mode=0o777, exist_ok=True)
-    except OSError as e:
-        print(f"Error creating directories: {e}")
-    finally:
-        os.umask(original_umask)
+    print("Saving video...")
+    download_video.run(device_names, device_video_dir)
 
-    # Set full permissions (read, write, execute for all)
-    os.chmod(device_video_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-    os.chmod(device_gcsv_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-
-    video_path = os.path.join(device_video_dir, "video.mp4")  # FIXME
-    gcsv_path = os.path.join(device_gcsv_dir, "data.gcsv")  # FIXME
-
-    # TODO quitar comprobaciones de existencia que ya se hacen en download
-    # Check if files exist
-    if os.path.exists(video_path):
-        print("Video already exists")
-    else:
-        print("Saving video...")
-        download_video.run(device_names, device_video_dir)
-
-    if os.path.exists(gcsv_path):
-        print("GCSV already exists")
-    else:
-        print("Saving GCSV...")
-        download_gcsv.run(device_names, device_gcsv_dir)
+    print("Saving GCSV...")
+    download_gcsv.run(device_names, device_gcsv_dir)
