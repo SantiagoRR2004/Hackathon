@@ -26,8 +26,23 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
     cap = cv2.VideoCapture(video_file)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(output_file, fourcc, fps, (width, height))
+
+    # Probar diferentes codecs hasta encontrar uno compatible
+    codecs = ['H264', 'avc1', 'mp4v', 'X264']
+    out = None
+
+    for codec in codecs:
+        fourcc = cv2.VideoWriter_fourcc(*codec)
+        out = cv2.VideoWriter(output_file, fourcc, fps, (width, height))
+        if out.isOpened():
+            print(f"VideoWriter inicializado correctamente con codec: {codec}")
+            break
+        else:
+            print(f"Error: No se pudo inicializar VideoWriter con codec: {codec}")
+
+    if not out.isOpened():
+        print("No se pudo inicializar ningún codec válido. Revisa tu instalación de OpenCV y FFmpeg.")
+        return
 
     frame_idx = 0
     while cap.isOpened():
@@ -39,9 +54,13 @@ def overlay_video_with_data(video_file, csv_file, output_file="output_with_overl
         data = synced_data[frame_idx]
         _, timestamp, rx, ry, rz, ax, ay, az = data
 
-        # Dibujar overlay en el frame
+        # Dibujar overlay en el frame (abajo a la derecha en color rojo)
         text = f"Timestamp: {timestamp:.3f} s | Rx: {rx:.3f} | Ry: {ry:.3f} | Rz: {rz:.3f} | Ax: {ax:.3f} | Ay: {ay:.3f} | Az: {az:.3f}"
-        cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
+        text_size, _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
+        text_x = width - text_size[0] - 10
+        text_y = height - 10
+
+        cv2.putText(frame, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2, cv2.LINE_AA)
 
         out.write(frame)
         frame_idx += 1
