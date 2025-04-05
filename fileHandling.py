@@ -15,7 +15,22 @@ def getConnectedDevices() -> list:
     return devices
 
 
-def is_video(filename):
+def isExtension(filename: str, valid_extensions: set) -> bool:
+    """
+    Check if the given filename has a valid file extension.
+
+    Args:
+        filename (str): The name of the file to check.
+        valid_extensions (set): A set of valid file extensions.
+
+    Returns:
+        bool: True if the file has a valid extension, False otherwise.
+    """
+    _, extension = os.path.splitext(filename.lower())
+    return extension in valid_extensions
+
+
+def is_video(filename: str) -> bool:
     """
     Check if the given filename has a valid video file extension.
 
@@ -26,11 +41,10 @@ def is_video(filename):
         bool: True if the file has a valid video extension, False otherwise.
     """
     valid_extensions = {".mp4", ".mov", ".avi", ".mkv", ".mts", ".m2ts"}
-    _, extension = os.path.splitext(filename.lower())
-    return extension in valid_extensions
+    return isExtension(filename, valid_extensions)
 
 
-def is_gcsv(filename):
+def is_gcsv(filename: str) -> bool:
     """
     Check if the given filename has a valid video file extension.
 
@@ -41,5 +55,4 @@ def is_gcsv(filename):
         bool: True if the file has a valid video extension, False otherwise.
     """
     valid_extensions = {".gcsv"}
-    _, extension = os.path.splitext(filename.lower())
-    return extension in valid_extensions
+    return isExtension(filename, valid_extensions)
