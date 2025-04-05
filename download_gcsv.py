@@ -30,6 +30,10 @@ def gcsv_files_from_cameras(camera_paths):
             logger.warning(f"Camera is not mounted at {camera_path}. Skipping.")
             continue
         for root, dirs, files in os.walk(camera_path):
+
+            # Skip directories that start with .Trash
+            dirs[:] = [d for d in dirs if not d.startswith('.Trash')]
+
             for filename in files:
                 if fileHandling.is_gcsv(filename):
                     yield camera_path, os.path.join(root, filename), filename
@@ -48,7 +52,7 @@ def run(camera_paths, destination_path):
     os.makedirs(destination_path, exist_ok=True)
 
     # Use ThreadPoolExecutor with executor.map to process files as they are generated
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor() as executor:
         # Create a generator expression for tasks to be processed by the executor
         tasks_iterable = (
             (cam_path, source, filename, destination_path)
