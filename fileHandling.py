@@ -60,7 +60,7 @@ def is_gcsv(filename: str) -> bool:
     return isExtension(filename, valid_extensions)
 
 
-def process_file(task):
+def process_file(task : tuple, logger=None) -> None:
     """
     Process a single file download task.
 
@@ -92,6 +92,8 @@ def process_file(task):
     # Check if the file already exists at the destination
     if not os.path.exists(destination):
         shutil.copy2(source, destination)
-        logger.info(f"Downloaded from {cam_path}: {filename}")
+        if logger:
+            logger.info(f"Downloaded from {cam_path}: {filename}")
     else:
-        logger.info(f"Skipped (already exists) from {cam_path}: {filename}")
+        if logger:
+            logger.warning(f"File already exists: {filename}. Skipping download.")
